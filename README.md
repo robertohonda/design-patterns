@@ -1,13 +1,13 @@
 # Design Patterns
-Design patterns are reusable solutions to commons software design problems.
+Design patterns are reusable solutions to common software design problems.
 
-Design Patterns are divided into 3 categories: Creational, Structural and Behavioral.
+Design patterns are divided into three categories: Creational, Structural, and Behavioral.
 
-## Creational Design Patterns
-Creational patterns consist of different mechanisms used to create objects.
+## 1. Creational Design Patterns
+Creational patterns provide different mechanisms for creating objects.
 
-## Structural Design Patterns
-Structural patterns refer to how to assemble objects and classes into larger structures.
+## 2. Structural Design Patterns
+Structural patterns describe how to assemble objects and classes into larger structures.
 
-## Behavioral Design Patterns
-Behavioral patterns control communication and the assignment of responsibilities between different objects.
+## 3. Behavioral Design Patterns
+Behavioral patterns define how objects communicate and assign responsibilities to one another.
