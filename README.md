@@ -52,6 +52,17 @@ const payment = PaymentFactory.create("paypal");
 payment.pay(100);
 ```
 
+### Pros
+✅ Decouples creation from usage
+✅ Centralized creation logic
+✅ Easier to test (mock Payment)
+✅ Supports SOLID principles
+
+### Cons
+❌ Extra abstraction
+❌ Factory can grow too large
+❌ Simple cases don’t need it
+
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
 
