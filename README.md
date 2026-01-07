@@ -61,7 +61,7 @@ payment.pay(100);
 ### Cons
 ❌ Extra abstraction  
 ❌ Factory can grow too large  
-❌ Simple cases don’t need it
+❌ Simple cases don’t need it  
 
 ### 1.2 Singleton Pattern
 Ensures that a class has only one instance and provides a global access point to it.
@@ -92,14 +92,14 @@ console.log(configA.getAppName());     // "MyApp"
 ```
 
 ### Pros
-✅ Guarantees a single shared instance
-✅ Consistent global state
-✅ Useful for configuration, logging, caching
+✅ Guarantees a single shared instance  
+✅ Consistent global state  
+✅ Useful for configuration, logging, caching  
 
 ### Cons
-❌ Acts like global state
-❌ Harder to mock and test
-❌ Overuse leads to tight coupling
+❌ Acts like global state  
+❌ Harder to mock and test  
+❌ Overuse leads to tight coupling  
 
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
