@@ -70,10 +70,8 @@ Ensures that a class has only one instance and provides a global access point to
 class AppConfig {
   private static instance: AppConfig;
 
-  // 2️⃣ Private constructor prevents direct creation
   private constructor(private readonly appName: string) {}
 
-  // 3️⃣ Global access point
   static getInstance(): AppConfig {
     if (!AppConfig.instance) {
       AppConfig.instance = new AppConfig("MyApp");
@@ -86,7 +84,6 @@ class AppConfig {
   }
 }
 
-// 4️⃣ Client code
 const configA = AppConfig.getInstance();
 const configB = AppConfig.getInstance();
 
