@@ -70,17 +70,13 @@ Ensures that a class has only one instance and provides a global access point to
 class AppConfig {
   private static instance: AppConfig;
 
-  private constructor(private readonly appName: string) {}
+  private constructor() {}
 
   static getInstance(): AppConfig {
     if (!AppConfig.instance) {
-      AppConfig.instance = new AppConfig("MyApp");
+      AppConfig.instance = new AppConfig();
     }
     return AppConfig.instance;
-  }
-
-  getAppName(): string {
-    return this.appName;
   }
 }
 
@@ -88,7 +84,6 @@ const configA = AppConfig.getInstance();
 const configB = AppConfig.getInstance();
 
 console.log(configA === configB);      // true
-console.log(configA.getAppName());     // "MyApp"
 ```
 
 ### Pros
