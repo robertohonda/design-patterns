@@ -61,7 +61,48 @@ payment.pay(100);
 ### Cons
 ❌ Extra abstraction  
 ❌ Factory can grow too large  
-❌ Simple cases don’t need it  
+❌ Simple cases don’t need it
+
+### 1.2 Singleton Pattern
+Ensures that a class has only one instance and provides a global access point to it.
+
+```TS
+class AppConfig {
+  private static instance: AppConfig;
+
+  // 2️⃣ Private constructor prevents direct creation
+  private constructor(private readonly appName: string) {}
+
+  // 3️⃣ Global access point
+  static getInstance(): AppConfig {
+    if (!AppConfig.instance) {
+      AppConfig.instance = new AppConfig("MyApp");
+    }
+    return AppConfig.instance;
+  }
+
+  getAppName(): string {
+    return this.appName;
+  }
+}
+
+// 4️⃣ Client code
+const configA = AppConfig.getInstance();
+const configB = AppConfig.getInstance();
+
+console.log(configA === configB);      // true
+console.log(configA.getAppName());     // "MyApp"
+```
+
+### Pros
+✅ Guarantees a single shared instance
+✅ Consistent global state
+✅ Useful for configuration, logging, caching
+
+### Cons
+❌ Acts like global state
+❌ Harder to mock and test
+❌ Overuse leads to tight coupling
 
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
