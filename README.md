@@ -96,6 +96,76 @@ console.log(configA === configB);      // true
 ❌ Harder to mock and test  
 ❌ Overuse leads to tight coupling  
 
+### 1.3 Builder Design Pattern
+
+The Builder Pattern is used to construct complex objects step by step.  
+It allows creating different representations of an object using the same construction process.
+
+```TS
+class User {
+  constructor(
+    public name: string,
+    public age: number,
+    public email: string,
+    public phone?: string,
+    public address?: string
+  ) {}
+}
+
+class UserBuilder {
+  private name!: string;
+  private age!: number;
+  private email!: string;
+  private phone?: string;
+  private address?: string;
+
+  setName(name: string): this {
+    this.name = name;
+    return this;
+  }
+
+  setAge(age: number): this {
+    this.age = age;
+    return this;
+  }
+
+  setEmail(email: string): this {
+    this.email = email;
+    return this;
+  }
+
+  setPhone(phone: string): this {
+    this.phone = phone;
+    return this;
+  }
+
+  setAddress(address: string): this {
+    this.address = address;
+    return this;
+  }
+
+  build(): User {
+    return new User(this.name, this.age, this.email, this.phone, this.address);
+  }
+}
+
+const user = new UserBuilder()
+  .setName("John")
+  .setAge(45)
+  .setEmail("john.doe@example.com")
+  .setPhone("123-456")
+  .setAddress("Washington")
+  .build();
+```
+
+### Pros
+✅ Easy to add new rules  
+✅ Highly readable  
+
+### Cons
+❌ More classes  
+❌ Overkill for simple validation  
+
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
 
