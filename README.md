@@ -166,6 +166,59 @@ const user = new UserBuilder()
 ❌ More classes  
 ❌ Overkill for simple validation  
 
+### 1.4 Prototype Design Pattern
+
+The Prototype Pattern creates new objects by **cloning an existing object** instead of creating them from scratch.
+
+```TS
+interface Prototype<T> {
+  clone(): T;
+}
+
+class UserProfile implements Prototype<UserProfile> {
+  constructor(
+    public role: string,
+    public permissions: string[],
+    public theme: string
+  ) {}
+
+  clone(): UserProfile {
+    return new UserProfile(
+      this.role,
+      [...this.permissions], // deep copy
+      this.theme
+    );
+  }
+}
+
+const adminTemplate = new UserProfile(
+  "admin",
+  ["read", "write", "delete"],
+  "dark"
+);
+
+const admin1 = adminTemplate.clone();
+admin1.theme = "light";
+
+const admin2 = adminTemplate.clone();
+
+console.log(adminTemplate.theme); // dark
+console.log(admin1.theme);        // light
+console.log(admin2.theme);        // dark
+```
+
+### Pros
+✅ Fast object creation  
+✅ Avoids complex constructors  
+✅ Reduces duplication  
+✅ Good for templates  
+
+### Cons
+❌ Cloning logic can get complex  
+❌ Deep copies must be handled carefully  
+❌ Not ideal for very dynamic objects  
+❌ Circular references might be very tricky
+
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
 
