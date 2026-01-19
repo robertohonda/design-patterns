@@ -9,7 +9,99 @@ Design patterns are categorized into three main groups:
 ## 1. Creational Design Patterns
 Creational patterns focus on object creation mechanisms, aiming to create objects in a flexible and reusable way.
 
-### 1.1 Factory Method Pattern
+### 1.1 Abstract Factory Design Pattern
+
+The Abstract Factory Pattern provides an interface for creating **families of related objects**
+without specifying their concrete implementations.
+
+```TS
+interface Button {
+  render(): void;
+}
+
+interface Modal {
+  render(): void;
+}
+
+class LightButton implements Button {
+  render() {
+    console.log("Render light button");
+  }
+}
+
+class LightModal implements Modal {
+  render() {
+    console.log("Render light modal");
+  }
+}
+
+class DarkButton implements Button {
+  render() {
+    console.log("Render dark button");
+  }
+}
+
+class DarkModal implements Modal {
+  render() {
+    console.log("Render dark modal");
+  }
+}
+
+interface UIFactory {
+  createButton(): Button;
+  createModal(): Modal;
+}
+
+class LightThemeFactory implements UIFactory {
+  createButton(): Button {
+    return new LightButton();
+  }
+
+  createModal(): Modal {
+    return new LightModal();
+  }
+}
+
+class DarkThemeFactory implements UIFactory {
+  createButton(): Button {
+    return new DarkButton();
+  }
+
+  createModal(): Modal {
+    return new DarkModal();
+  }
+}
+
+function renderUI(factory: UIFactory) {
+  const button = factory.createButton();
+  const modal = factory.createModal();
+
+  button.render();
+  modal.render();
+}
+
+const themeFactory: UIFactory =
+  Math.random() > 0.5
+    ? new LightThemeFactory()
+    : new DarkThemeFactory();
+
+renderUI(themeFactory);
+```
+
+### Pros
+
+✅ Ensures compatible products  
+✅ Easy to swap families    
+✅ Strong adherence to DIP  
+✅ Scales well for complex systems  
+
+### Cons
+
+❌ More abstraction  
+❌ Harder to add new product types  
+❌ Overkill for small apps  
+
+### 1.2 Factory Method Pattern
 Defines an interface for creating an object but lets subclasses alter the type of objects that will be created.
 
 ```TS
@@ -63,7 +155,7 @@ payment.pay(100);
 ❌ Factory can grow too large  
 ❌ Simple cases don’t need it  
 
-### 1.2 Singleton Pattern
+### 1.3 Singleton Pattern
 Ensures that a class has only one instance and provides a global access point to it.
 
 ```TS
@@ -96,7 +188,7 @@ console.log(configA === configB);      // true
 ❌ Harder to mock and test  
 ❌ Overuse leads to tight coupling  
 
-### 1.3 Builder Design Pattern
+### 1.4 Builder Design Pattern
 
 The Builder Pattern is used to construct complex objects step by step.  
 It allows creating different representations of an object using the same construction process.
@@ -166,7 +258,7 @@ const user = new UserBuilder()
 ❌ More classes  
 ❌ Overkill for simple validation  
 
-### 1.4 Prototype Design Pattern
+### 1.5 Prototype Design Pattern
 
 The Prototype Pattern creates new objects by **cloning an existing object** instead of creating them from scratch.
 
