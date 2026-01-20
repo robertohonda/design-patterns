@@ -259,7 +259,6 @@ const user = new UserBuilder()
 ❌ Overkill for simple validation  
 
 ### 1.5 Prototype Design Pattern
-
 The Prototype Pattern creates new objects by **cloning an existing object** instead of creating them from scratch.
 
 ```TS
@@ -313,6 +312,39 @@ console.log(admin2.theme);        // dark
 
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
+
+### 2.1 Adapter Design Pattern
+The Adapter Pattern allows **objects with incompatible interfaces** to work together
+by converting one interface into another that the client expects.
+
+```TS
+class LegacyLogger {
+  logMessage(msg: string) {
+    console.log("LEGACY:", msg);
+  }
+}
+
+interface Logger {
+  log(message: string): void;
+}
+
+class LoggerAdapter implements Logger {
+  constructor(private legacy: LegacyLogger) {}
+
+  log(message: string): void {
+    this.legacy.logMessage(message);
+  }
+}
+```
+
+### Pros
+✅ Allows reuse of existing code  
+✅ Decouples client from third-party APIs  
+✅ Follows Open/Closed Principle  
+
+### Cons
+❌ Extra layer of abstraction  
+❌ Can hide complexity  
 
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
