@@ -313,7 +313,66 @@ console.log(admin2.theme);        // dark
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
 
-### 2.1 Adapter Design Pattern
+### 2.1 Decorator Design Pattern
+The Decorator Pattern allows you to **add new behavior to an object dynamically**
+without modifying its original class.
+
+It works by **wrapping** an object and extending its behavior.
+
+```TS
+interface Notifier {
+  send(message: string): void;
+}
+
+class BasicNotifier implements Notifier {
+  send(message: string): void {
+    console.log(`Sending email: ${message}`);
+  }
+}
+
+abstract class NotifierDecorator implements Notifier {
+  constructor(protected notifier: Notifier) {}
+
+  send(message: string): void {
+    this.notifier.send(message);
+  }
+}
+
+class SMSDecorator extends NotifierDecorator {
+  send(message: string): void {
+    super.send(message);
+    console.log(`Sending SMS: ${message}`);
+  }
+}
+
+class PushDecorator extends NotifierDecorator {
+  send(message: string): void {
+    super.send(message);
+    console.log(`Sending push notification: ${message}`);
+  }
+}
+
+const notifier = new PushDecorator(
+  new SMSDecorator(
+    new BasicNotifier()
+  )
+);
+
+notifier.send("Your order has shipped!");
+```
+
+### Pros
+✅ Open/Closed Principle  
+✅ Flexible combinations  
+✅ Single Responsibility  
+✅ Reusable behavior  
+
+### Cons
+❌ Many small classes  
+❌ Debugging can be harder  
+❌ Order of decorators matters  
+
+### 2.2 Adapter Design Pattern
 The Adapter Pattern allows **objects with incompatible interfaces** to work together
 by converting one interface into another that the client expects.
 
