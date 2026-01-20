@@ -324,41 +324,38 @@ interface Notifier {
   send(message: string): void;
 }
 
-class BasicNotifier implements Notifier {
+class EmailNotifier implements Notifier {
   send(message: string): void {
-    console.log(`Sending email: ${message}`);
+    console.log(`Email: ${message}`);
   }
 }
 
-abstract class NotifierDecorator implements Notifier {
-  constructor(protected notifier: Notifier) {}
+class SMSDecorator implements Notifier {
+  constructor(private notifier: Notifier) {}
 
   send(message: string): void {
     this.notifier.send(message);
+    console.log(`SMS: ${message}`);
   }
 }
 
-class SMSDecorator extends NotifierDecorator {
+class PushDecorator implements Notifier {
+  constructor(private notifier: Notifier) {}
+
   send(message: string): void {
-    super.send(message);
-    console.log(`Sending SMS: ${message}`);
+    this.notifier.send(message);
+    console.log(`Push: ${message}`);
   }
 }
 
-class PushDecorator extends NotifierDecorator {
-  send(message: string): void {
-    super.send(message);
-    console.log(`Sending push notification: ${message}`);
-  }
-}
+const notifier =
+  new PushDecorator(
+    new SMSDecorator(
+      new EmailNotifier()
+    )
+  );
 
-const notifier = new PushDecorator(
-  new SMSDecorator(
-    new BasicNotifier()
-  )
-);
-
-notifier.send("Your order has shipped!");
+notifier.send("Order shipped");
 ```
 
 ### Pros
