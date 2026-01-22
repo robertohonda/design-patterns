@@ -9,7 +9,7 @@ Design patterns are categorized into three main groups:
 ## 1. Creational Design Patterns
 Creational patterns focus on object creation mechanisms, aiming to create objects in a flexible and reusable way.
 
-### 1.1 Abstract Factory Design Pattern
+### 1.1 Abstract Factory Pattern
 
 The Abstract Factory Pattern provides an interface for creating **families of related objects**
 without specifying their concrete implementations.
@@ -188,7 +188,7 @@ console.log(configA === configB);      // true
 ❌ Harder to mock and test  
 ❌ Overuse leads to tight coupling  
 
-### 1.4 Builder Design Pattern
+### 1.4 Builder Pattern
 
 The Builder Pattern is used to construct complex objects step by step.  
 It allows creating different representations of an object using the same construction process.
@@ -258,7 +258,7 @@ const user = new UserBuilder()
 ❌ More classes  
 ❌ Overkill for simple validation  
 
-### 1.5 Prototype Design Pattern
+### 1.5 Prototype Pattern
 The Prototype Pattern creates new objects by **cloning an existing object** instead of creating them from scratch.
 
 ```TS
@@ -313,7 +313,7 @@ console.log(admin2.theme);        // dark
 ## 2. Structural Design Patterns
 Structural patterns focus on how classes and objects are composed to form larger, flexible structures.
 
-### 2.1 Decorator Design Pattern
+### 2.1 Decorator Pattern
 The Decorator Pattern allows you to **add new behavior to an object dynamically**
 without modifying its original class.
 
@@ -369,7 +369,7 @@ notifier.send("Order shipped");
 ❌ Debugging can be harder  
 ❌ Order of decorators matters  
 
-### 2.2 Adapter Design Pattern
+### 2.2 Adapter Pattern
 The Adapter Pattern allows **objects with incompatible interfaces** to work together
 by converting one interface into another that the client expects.
 
@@ -401,6 +401,61 @@ class LoggerAdapter implements Logger {
 ### Cons
 ❌ Extra layer of abstraction  
 ❌ Can hide complexity  
+
+### 3.3 Facade Pattern
+Facade provides a simple, unified interface to a complex subsystem.
+
+```TS
+class PaymentService {
+  pay(amount: number) {
+    console.log("Payment processed:", amount);
+  }
+}
+
+class InventoryService {
+  reserve(productId: string) {
+    console.log("Product reserved:", productId);
+  }
+}
+
+class ShippingService {
+  ship(productId: string) {
+    console.log("Product shipped:", productId);
+  }
+}
+
+class EmailService {
+  sendConfirmation() {
+    console.log("Confirmation email sent");
+  }
+}
+
+class OrderFacade {
+  private payment = new PaymentService();
+  private inventory = new InventoryService();
+  private shipping = new ShippingService();
+  private email = new EmailService();
+
+  placeOrder(productId: string, amount: number) {
+    this.inventory.reserve(productId);
+    this.payment.pay(amount);
+    this.shipping.ship(productId);
+    this.email.sendConfirmation();
+  }
+}
+
+const order = new OrderFacade();
+order.placeOrder("P123", 100);
+```
+
+### Pros
+✅ Simplifies API usage  
+✅ Centralizes workflow logic  
+
+### Cons
+❌ Can become a God Object if it grows too much  
+❌ May hide important flexibility  
+❌ Clients may bypass it, causing inconsistency  
 
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
