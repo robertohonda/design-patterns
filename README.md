@@ -402,7 +402,7 @@ class LoggerAdapter implements Logger {
 ❌ Extra layer of abstraction  
 ❌ Can hide complexity  
 
-### 3.3 Facade Pattern
+### 2.3 Facade Pattern
 Facade provides a simple, unified interface to a complex subsystem.
 
 ```TS
@@ -457,7 +457,7 @@ order.placeOrder("P123", 100);
 ❌ May hide important flexibility  
 ❌ Clients may bypass it, causing inconsistency  
 
-### 3.4 Proxy Pattern
+### 2.4 Proxy Pattern
 Proxy provides a stand-in object that controls access to another object.
 > “You’re not talking to the real thing directly — I’m managing access for you.”
 
