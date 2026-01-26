@@ -457,5 +457,50 @@ order.placeOrder("P123", 100);
 ❌ May hide important flexibility  
 ❌ Clients may bypass it, causing inconsistency  
 
+### 3.4 Proxy Pattern
+Proxy provides a stand-in object that controls access to another object.
+> “You’re not talking to the real thing directly — I’m managing access for you.”
+
+```TS
+interface UserService {
+  getUser(id: string): Promise<string>;
+}
+
+class RealUserService implements UserService {
+  async getUser(id: string): Promise<string> {
+    console.log("Fetching user from API...");
+    return `User(${id})`;
+  }
+}
+
+class UserServiceProxy implements UserService {
+  private realService = new RealUserService();
+  private cache = new Map<string, string>();
+
+  async getUser(id: string): Promise<string> {
+    if (this.cache.has(id)) {
+      console.log("Returning cached user");
+      return this.cache.get(id)!;
+    }
+
+    const user = await this.realService.getUser(id);
+    this.cache.set(id, user);
+    return user;
+  }
+}
+
+const userService: UserService = new UserServiceProxy();
+
+await userService.getUser("1"); // API call
+await userService.getUser("1"); // Cached
+```
+
+### Pros
+✅ Encourages loose coupling  
+
+### Cons
+❌ The response from the service might get delayed.
+❌ Introduces additional abstraction  
+
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
