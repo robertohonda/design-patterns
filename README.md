@@ -502,5 +502,67 @@ await userService.getUser("1"); // Cached
 ❌ The response from the service might get delayed.
 ❌ Introduces additional abstraction  
 
+### 2.5 Composite Pattern
+Composite is a structural design pattern that lets you compose objects into tree structures and then work with these structures as if they were individual objects.
+
+```TS
+interface FileSystemItem {
+  getSize(): number;
+}
+
+class File implements FileSystemItem {
+  constructor(
+    private name: string,
+    private size: number
+  ) {}
+
+  getSize(): number {
+    return this.size;
+  }
+}
+
+class Folder implements FileSystemItem {
+  private items: FileSystemItem[] = [];
+
+  constructor(private name: string) {}
+
+  add(item: FileSystemItem): void {
+    this.items.push(item);
+  }
+
+  getSize(): number {
+    return this.items.reduce(
+      (total, item) => total + item.getSize(),
+      0
+    );
+  }
+}
+
+const file1 = new File("a.txt", 100);
+const file2 = new File("b.txt", 200);
+
+const folder = new Folder("docs");
+folder.add(file1);
+folder.add(file2);
+
+const root = new Folder("root");
+root.add(folder);
+root.add(new File("c.txt", 300));
+
+console.log(root.getSize()); // 600
+```
+
+### Pros
+✅ Treats individual and composite objects uniformly  
+✅ Simplifies client code  
+✅ Natural fit for tree structures  
+✅ Easy to add new leaf types  
+
+### Cons
+❌ Can make design overly generic  
+❌ Harder to restrict what can be added  
+❌ Debugging recursive structures is harder  
+❌ May hide performance costs  
+
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
