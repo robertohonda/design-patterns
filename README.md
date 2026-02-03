@@ -564,5 +564,70 @@ console.log(root.getSize()); // 600
 ❌ Debugging recursive structures is harder  
 ❌ May hide performance costs  
 
+### 2.6 Bridge Pattern
+Composite is a structural design pattern that lets you compose objects into tree structures and then work with these structures as if they were individual objects.
+
+```TS
+interface Theme {
+  getBackgroundColor(): string;
+  getTextColor(): string;
+}
+
+class LightTheme implements Theme {
+  getBackgroundColor(): string {
+    return "#ffffff";
+  }
+
+  getTextColor(): string {
+    return "#000000";
+  }
+}
+
+class DarkTheme implements Theme {
+  getBackgroundColor(): string {
+    return "#1e1e1e";
+  }
+
+  getTextColor(): string {
+    return "#ffffff";
+  }
+}
+
+abstract class UIComponent {
+  constructor(protected theme: Theme) {}
+
+  abstract render(): void;
+}
+
+class Button extends UIComponent {
+  render(): void {
+    console.log(
+      `Button with bg=${this.theme.getBackgroundColor()} text=${this.theme.getTextColor()}`
+    );
+  }
+}
+
+const light = new LightTheme();
+const dark = new DarkTheme();
+
+const lightButton = new Button(light);
+const darkButton = new Button(dark);
+
+
+lightButton.render();
+darkButton.render();
+```
+
+### Pros
+✅ Avoids class explosion  
+✅ Decouples abstraction from implementation  
+✅ Improves extensibility  
+✅ Strong alignment with DIP  
+
+### Cons
+❌ Increases initial complexity  
+❌ More classes to manage  
+❌ Overkill for simple hierarchies  
+
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
