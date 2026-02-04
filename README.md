@@ -629,5 +629,65 @@ darkButton.render();
 ❌ More classes to manage  
 ❌ Overkill for simple hierarchies  
 
+### 2.6 Flyweight Pattern
+Flyweight minimizes memory usage by sharing common (intrinsic) state between many objects, while keeping unique (extrinsic) state outside.
+> “Don’t duplicate what can be shared.”
+
+```TS
+class CharacterStyle {
+  constructor(
+    public font: string,
+    public size: number,
+    public color: string
+  ) {}
+}
+
+class CharacterStyleFactory {
+  private static styles = new Map<string, CharacterStyle>();
+
+  static getStyle(font: string, size: number, color: string): CharacterStyle {
+    const key = `${font}-${size}-${color}`;
+
+    if (!this.styles.has(key)) {
+      this.styles.set(key, new CharacterStyle(font, size, color));
+    }
+
+    return this.styles.get(key)!;
+  }
+}
+
+class Character {
+  constructor(
+    public char: string,
+    public x: number,
+    public y: number,
+    public style: CharacterStyle
+  ) {}
+
+  draw(): void {
+    console.log(
+      `Draw '${this.char}' at (${this.x}, ${this.y}) with ${this.style.font}`
+    );
+  }
+}
+
+const style = CharacterStyleFactory.getStyle("Arial", 12, "black");
+
+const c1 = new Character("H", 0, 0, style);
+const c2 = new Character("i", 10, 0, style);
+
+c1.draw();
+c2.draw();
+```
+
+## Pros
+✅ Significantly reduces memory usage  
+✅ Encourages separation of shared vs unique state  
+
+## Cons
+❌ Changing a flyweight affects all consumers  
+❌ Increases code complexity  
+❌ You might be trading RAM over CPU cycles when some of the context data needs to be recalculated each time somebody calls a flyweight method.  
+
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
