@@ -629,7 +629,7 @@ darkButton.render();
 ❌ More classes to manage  
 ❌ Overkill for simple hierarchies  
 
-### 2.6 Flyweight Pattern
+### 2.7 Flyweight Pattern
 Flyweight minimizes memory usage by sharing common (intrinsic) state between many objects, while keeping unique (extrinsic) state outside.
 > “Don’t duplicate what can be shared.”
 
@@ -680,14 +680,60 @@ c1.draw();
 c2.draw();
 ```
 
-## Pros
+### Pros
 ✅ Significantly reduces memory usage  
 ✅ Encourages separation of shared vs unique state  
 
-## Cons
+### Cons
 ❌ Changing a flyweight affects all consumers  
 ❌ Increases code complexity  
 ❌ You might be trading RAM over CPU cycles when some of the context data needs to be recalculated each time somebody calls a flyweight method.  
 
 ## 3. Behavioral Design Patterns
 Behavioral patterns focus on communication between objects and the assignment of responsibilities.
+
+### 3.1 Strategy Pattern
+Strategy defines a family of algorithms, encapsulates each one, and makes them interchangeable.
+
+```TS
+interface PaymentStrategy {
+  pay(amount: number): void;
+}
+
+class CreditCardPaymentStrategy implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid ${amount} using Credit Card`);
+  }
+}
+
+class PaypalPaymentStrategy implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid ${amount} using PayPal`);
+  }
+}
+
+class Checkout {
+  constructor(private readonly paymentStrategy: PaymentStrategy) {}
+
+  process(amount: number): void {
+    this.paymentStrategy.pay(amount);
+  }
+}
+
+const creditCheckout = new Checkout(new CreditCardPaymentStrategy());
+creditCheckout.process(100);
+
+const paypalCheckout = new Checkout(new PaypalPaymentStrategy());
+paypalCheckout.process(100);
+```
+
+### Pros
+✅ Eliminates large conditional statements  
+✅ Makes algorithms interchangeable  
+✅ Improves testability  
+✅ Strong adherence to OCP and DIP 
+
+### Cons
+❌ Increases number of classes  
+❌ Client must understand which strategy to choose  
+❌ Overkill for simple logic  
