@@ -737,3 +737,70 @@ paypalCheckout.process(100);
 ❌ Increases number of classes  
 ❌ Client must understand which strategy to choose  
 ❌ Overkill for simple logic  
+
+
+### 3.2 Observer Pattern
+Observer defines a one-to-many dependency:
+when one object changes state, all dependents are notified automatically.
+
+```TS
+interface Subscriber {
+  update(videoTitle: string): void;
+}
+
+class YouTubeChannel {
+  private subscribers: Subscriber[] = [];
+
+  subscribe(sub: Subscriber): void {
+    this.subscribers.push(sub);
+  }
+
+  unsubscribe(sub: Subscriber): void {
+    this.subscribers = this.subscribers.filter(s => s !== sub);
+  }
+
+  upload(videoTitle: string): void {
+    console.log(`New video: ${videoTitle}`);
+    this.notify(videoTitle);
+  }
+
+  private notify(videoTitle: string): void {
+    this.subscribers.forEach(sub => sub.update(videoTitle));
+  }
+}
+
+class User implements Subscriber {
+  constructor(private name: string) {}
+
+  update(videoTitle: string): void {
+    console.log(`${this.name} received notification: ${videoTitle}`);
+  }
+}
+
+const channel = new YouTubeChannel();
+
+const alice = new User("Alice");
+const bob = new User("Bob");
+
+channel.subscribe(alice);
+channel.subscribe(bob);
+
+channel.upload("Observer Pattern Explained");
+
+// Bob unsubscribes
+channel.unsubscribe(bob);
+
+channel.upload("Strategy Pattern Explained");
+```
+
+### Pros
+✅ Decouples publisher from subscribers  
+✅ Supports event-driven architecture  
+✅ Easy to add/remove listeners  
+✅ Scales well with many dependents  
+
+### Cons
+❌ Can cause memory leaks if not unsubscribed  
+❌ Notification chains may be hard to debug  
+❌ Order of execution may be unpredictable  
+❌ Cascading updates can hurt performance 
