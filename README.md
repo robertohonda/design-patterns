@@ -800,7 +800,88 @@ channel.upload("Strategy Pattern Explained");
 ✅ Scales well with many dependents  
 
 ### Cons
-❌ Can cause memory leaks if not unsubscribed  
-❌ Notification chains may be hard to debug  
-❌ Order of execution may be unpredictable  
-❌ Cascading updates can hurt performance 
+❌ Can cause memory leaks if not unsubscribed    
+❌ Notification chains may be hard to debug   
+❌ Order of execution may be unpredictable   
+❌ Cascading updates can hurt performance  
+
+### 3.3 Command Pattern
+Command encapsulates a request as an object so it can be executed, queued, logged, or undone.
+> “Turn actions into objects.”
+
+```TS
+interface Command {
+  execute(): void;
+  undo(): void;
+}
+
+class Light {
+  turnOn(): void {
+    console.log("Light ON");
+  }
+
+  turnOff(): void {
+    console.log("Light OFF");
+  }
+}
+
+class TurnOnLightCommand implements Command {
+  constructor(private light: Light) {}
+
+  execute(): void {
+    this.light.turnOn();
+  }
+
+  undo(): void {
+    this.light.turnOff();
+  }
+}
+
+class TurnOffLightCommand implements Command {
+  constructor(private light: Light) {}
+
+  execute(): void {
+    this.light.turnOff();
+  }
+
+  undo(): void {
+    this.light.turnOn();
+  }
+}
+
+class RemoteControl {
+  private history: Command[] = [];
+
+  press(command: Command): void {
+    command.execute();
+    this.history.push(command);
+  }
+
+  undo(): void {
+    const last = this.history.pop();
+    last?.undo();
+  }
+}
+
+const light = new Light();
+const remote = new RemoteControl();
+
+const on = new TurnOnLightCommand(light);
+const off = new TurnOffLightCommand(light);
+
+remote.press(on);
+remote.press(off);
+
+remote.undo(); // Light ON again
+```
+
+### Pros
+✅ Decouples sender from receiver  
+✅ Supports undo/redo operations  
+✅ Enables queuing, logging, scheduling  
+✅ Easy to add new commands (OCP)  
+
+### Cons
+❌ Increases number of classes  
+❌ Can add boilerplate  
+❌ Overkill for simple method calls  
