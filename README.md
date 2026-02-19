@@ -885,3 +885,72 @@ remote.undo(); // Light ON again
 ❌ Increases number of classes  
 ❌ Can add boilerplate  
 ❌ Overkill for simple method calls  
+
+### 3.4 Command Pattern
+Chain of Responsibility passes a request along a chain of handlers.
+Each handler decides whether to process it or pass it forward.
+
+```TS
+abstract class Handler {
+  private next?: Handler
+
+  setNext(handler: Handler): Handler {
+    this.next = handler
+    return handler
+  }
+
+  handle(request: Request): void {
+    if (this.next) {
+      this.next.handle(request)
+    }
+  }
+}
+
+class LoggingHandler extends Handler {
+  handle(request: Request) {
+    console.log("Logging request:", request.url)
+    super.handle(request)
+  }
+}
+
+class AuthHandler extends Handler {
+  handle(request: Request) {
+    if (!request.headers["auth"]) {
+      console.log("Unauthorized ❌")
+      return
+    }
+
+    console.log("Authenticated ✅")
+    super.handle(request)
+  }
+}
+
+class ControllerHandler extends Handler {
+  handle(request: Request) {
+    console.log("Handling business logic 🚀")
+  }
+}
+
+const logger = new LoggingHandler()
+const auth = new AuthHandler()
+const controller = new ControllerHandler()
+
+logger.setNext(auth).setNext(controller)
+
+logger.handle({
+  url: "/dashboard",
+  headers: { auth: "token" }
+} as any)
+```
+
+### Pros
+✅ Reduces large conditional logic  
+✅ Decouples sender from concrete handler  
+✅ Easy to reorder or extend chain  
+✅ Follows Open/Closed Principle  
+✅ Good for middleware pipelines  
+
+### Cons
+❌ Request may go unhandled
+❌ Debugging can be harder
+❌ Order dependency can cause subtle bugs
