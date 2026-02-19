@@ -951,6 +951,6 @@ logger.handle({
 ✅ Good for middleware pipelines  
 
 ### Cons
-❌ Request may go unhandled
-❌ Debugging can be harder
-❌ Order dependency can cause subtle bugs
+❌ Request may go unhandled  
+❌ Debugging can be harder  
+❌ Order dependency can cause subtle bugs  
