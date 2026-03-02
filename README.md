@@ -961,13 +961,17 @@ Instead of giant if/else or switch statements,
 you move behavior into separate state classes.
 
 ```TS
+interface PlayerContext {
+  setState(state: PlayerState): void;
+}
+
 interface PlayerState {
   play(): void;
   pause(): void;
   stop(): void;
 }
 
-class MediaPlayer {
+class MediaPlayer implements PlayerContext {
   private state: PlayerState;
 
   constructor() {
@@ -978,72 +982,63 @@ class MediaPlayer {
     this.state = state;
   }
 
-  play() {
-    this.state.play();
-  }
-
-  pause() {
-    this.state.pause();
-  }
-
-  stop() {
-    this.state.stop();
-  }
+  play() { this.state.play(); }
+  pause() { this.state.pause(); }
+  stop() { this.state.stop(); }
 }
 
 class StoppedState implements PlayerState {
-  constructor(private player: MediaPlayer) {}
+  constructor(private player: PlayerContext) {}
 
-  play() {
+  play(): void {
     console.log("Starting playback...");
     this.player.setState(new PlayingState(this.player));
   }
 
-  pause() {
+  pause(): void {
     console.log("Can't pause. Player is stopped.");
   }
 
-  stop() {
-    console.log("Already stopped");
+  stop(): void {
+    console.log("Already stopped.");
   }
 }
 
 class PlayingState implements PlayerState {
-  constructor(private player: MediaPlayer) {}
+  constructor(private player: PlayerContext) {}
 
-  play() {
-    console.log("Already playing");
+  play(): void {
+    console.log("Already playing.");
   }
 
-  pause() {
+  pause(): void {
     console.log("Pausing...");
     this.player.setState(new PausedState(this.player));
   }
 
-  stop() {
+  stop(): void {
     console.log("Stopping...");
     this.player.setState(new StoppedState(this.player));
   }
 }
 
 class PausedState implements PlayerState {
-  constructor(private player: MediaPlayer) {}
+  constructor(private player: PlayerContext) {}
 
-  play() {
+  play(): void {
     console.log("Resuming...");
     this.player.setState(new PlayingState(this.player));
   }
 
-  pause() {
-    console.log("Already paused");
+  pause(): void {
+    console.log("Already paused.");
   }
 
-  stop() {
+  stop(): void {
     console.log("Stopping...");
     this.player.setState(new StoppedState(this.player));
   }
 }
-
 
 const player = new MediaPlayer();
 
