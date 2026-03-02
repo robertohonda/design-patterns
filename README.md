@@ -886,7 +886,7 @@ remote.undo(); // Light ON again
 ❌ Can add boilerplate  
 ❌ Overkill for simple method calls  
 
-### 3.4 Command Pattern
+### 3.4 Chain of Responsibility
 Chain of Responsibility passes a request along a chain of handlers.
 Each handler decides whether to process it or pass it forward.
 
