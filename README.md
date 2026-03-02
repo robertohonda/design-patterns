@@ -954,3 +954,112 @@ logger.handle({
 ❌ Request may go unhandled  
 ❌ Debugging can be harder  
 ❌ Order dependency can cause subtle bugs  
+
+### 3.5 State Pattern
+State allows an object to change its behavior when its internal state changes.
+Instead of giant if/else or switch statements,
+you move behavior into separate state classes.
+
+```TS
+interface PlayerState {
+  play(): void;
+  pause(): void;
+  stop(): void;
+}
+
+class MediaPlayer {
+  private state: PlayerState;
+
+  constructor() {
+    this.state = new StoppedState(this);
+  }
+
+  setState(state: PlayerState) {
+    this.state = state;
+  }
+
+  play() {
+    this.state.play();
+  }
+
+  pause() {
+    this.state.pause();
+  }
+
+  stop() {
+    this.state.stop();
+  }
+}
+
+class StoppedState implements PlayerState {
+  constructor(private player: MediaPlayer) {}
+
+  play() {
+    console.log("Starting playback...");
+    this.player.setState(new PlayingState(this.player));
+  }
+
+  pause() {
+    console.log("Can't pause. Player is stopped.");
+  }
+
+  stop() {
+    console.log("Already stopped");
+  }
+}
+
+class PlayingState implements PlayerState {
+  constructor(private player: MediaPlayer) {}
+
+  play() {
+    console.log("Already playing");
+  }
+
+  pause() {
+    console.log("Pausing...");
+    this.player.setState(new PausedState(this.player));
+  }
+
+  stop() {
+    console.log("Stopping...");
+    this.player.setState(new StoppedState(this.player));
+  }
+}
+
+class PausedState implements PlayerState {
+  constructor(private player: MediaPlayer) {}
+
+  play() {
+    console.log("Resuming...");
+    this.player.setState(new PlayingState(this.player));
+  }
+
+  pause() {
+    console.log("Already paused");
+  }
+
+  stop() {
+    console.log("Stopping...");
+    this.player.setState(new StoppedState(this.player));
+  }
+}
+
+
+const player = new MediaPlayer();
+
+player.play();  // Starting playback...
+player.pause(); // Pausing...
+player.play();  // Resuming...
+player.stop();  // Stopping...
+```
+
+### Pros
+✅ Single Responsibility Principle. Organize the code related to particular states into separate classes  
+✅ Open/Closed Principle. Introduce new states without changing existing state classes or the context  
+✅ Eliminates large conditional statements
+
+### Cons
+❌ Increases number of classes  
+❌ Can feel overengineered for simple cases  
+❌ State transitions can become hard to track  
+
