@@ -1058,3 +1058,64 @@ player.stop();  // Stopping...
 ❌ Can feel overengineered for simple cases  
 ❌ State transitions can become hard to track  
 
+### 3.6 ### 3.5 State Pattern
+Mediator defines an object that centralizes communication between other objects.
+
+```TS
+interface Mediator {
+  send(message: string, sender: User): void;
+}
+
+class ChatRoom implements Mediator {
+  private users: User[] = [];
+
+  addUser(user: User) {
+    this.users.push(user);
+  }
+
+  send(message: string, sender: User): void {
+    for (const user of this.users) {
+      if (user !== sender) {
+        user.receive(message);
+      }
+    }
+  }
+}
+
+class User {
+  constructor(
+    public name: string,
+    private mediator: Mediator
+  ) {}
+
+  send(message: string) {
+    console.log(`${this.name} sends: ${message}`);
+    this.mediator.send(message, this);
+  }
+
+  receive(message: string) {
+    console.log(`${this.name} receives: ${message}`);
+  }
+}
+
+const chatRoom = new ChatRoom();
+
+const alice = new User("Alice", chatRoom);
+const bob = new User("Bob", chatRoom);
+const charlie = new User("Charlie", chatRoom);
+
+chatRoom.addUser(alice);
+chatRoom.addUser(bob);
+chatRoom.addUser(charlie);
+
+alice.send("Hello everyone!");
+```
+
+### Pros
+✅ Reduces direct dependencies between objects  
+✅ Centralizes communication logic  
+
+### Cons
+❌ Single point of failure  
+❌ Mediator can become a “God object”  
+❌ Performance overhead  
