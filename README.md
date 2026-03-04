@@ -1058,7 +1058,7 @@ player.stop();  // Stopping...
 ❌ Can feel overengineered for simple cases  
 ❌ State transitions can become hard to track  
 
-### 3.6 ### 3.5 State Pattern
+### 3.6 Mediator Pattern
 Mediator defines an object that centralizes communication between other objects.
 
 ```TS
