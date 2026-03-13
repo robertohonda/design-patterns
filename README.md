@@ -1128,7 +1128,7 @@ class Song {
   constructor(public title: string) {}
 }
 
-interface Iterator<T> {
+interface CustomIterator<T> {
   hasNext(): boolean;
   next(): T;
 }
@@ -1140,12 +1140,20 @@ class Playlist {
     this.songs.push(song);
   }
 
-  createIterator(): PlaylistIterator {
+  createIterator() {
     return new PlaylistIterator(this.songs);
+  }
+
+  createRandomIterator() {
+    return new RandomPlaylistIterator(this.songs);
+  }
+
+  createSortedIterator() {
+    return new SortedPlaylistIterator(this.songs);
   }
 }
 
-class PlaylistIterator implements Iterator<Song> {
+class PlaylistIterator implements CustomIterator<Song> {
   private index = 0;
 
   constructor(private songs: Song[]) {}
@@ -1159,17 +1167,71 @@ class PlaylistIterator implements Iterator<Song> {
   }
 }
 
+class RandomPlaylistIterator implements CustomIterator<Song> {
+  private index = 0;
+  private shuffled: Song[];
+
+  constructor(songs: Song[]) {
+    this.shuffled = [...songs].sort(() => Math.random() - 0.5);
+  }
+
+  hasNext(): boolean {
+    return this.index < this.shuffled.length;
+  }
+
+  next(): Song {
+    return this.shuffled[this.index++];
+  }
+}
+
+class SortedPlaylistIterator implements CustomIterator<Song> {
+  private index = 0;
+  private sorted: Song[];
+
+  constructor(songs: Song[]) {
+    this.sorted = [...songs].sort((a, b) =>
+      a.title.localeCompare(b.title)
+    );
+  }
+
+  hasNext(): boolean {
+    return this.index < this.sorted.length;
+  }
+
+  next(): Song {
+    return this.sorted[this.index++];
+  }
+}
+
 const playlist = new Playlist();
 
 playlist.add(new Song("Song A"));
 playlist.add(new Song("Song B"));
 playlist.add(new Song("Song C"));
 
+console.log("Playlist");
+
 const iterator = playlist.createIterator();
 
 while (iterator.hasNext()) {
   const song = iterator.next();
   console.log(song.title);
+}
+
+console.log("Random playlist");
+
+const random = playlist.createRandomIterator();
+
+while (random.hasNext()) {
+  console.log(random.next().title);
+}
+
+console.log("Sorted playlist");
+
+const sorted = playlist.createSortedIterator();
+
+while (sorted.hasNext()) {
+  console.log(sorted.next().title);
 }
 ```
 
