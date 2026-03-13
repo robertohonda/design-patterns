@@ -1119,3 +1119,64 @@ alice.send("Hello everyone!");
 ❌ Single point of failure  
 ❌ Mediator can become a “God object”  
 ❌ Performance overhead  
+
+### 3.7 Iterator Pattern
+Iterator provides a way to access elements of a collection sequentially without exposing its internal structure.
+
+```TS
+class Song {
+  constructor(public title: string) {}
+}
+
+interface Iterator<T> {
+  hasNext(): boolean;
+  next(): T;
+}
+
+class Playlist {
+  private songs: Song[] = [];
+
+  add(song: Song) {
+    this.songs.push(song);
+  }
+
+  createIterator(): PlaylistIterator {
+    return new PlaylistIterator(this.songs);
+  }
+}
+
+class PlaylistIterator implements Iterator<Song> {
+  private index = 0;
+
+  constructor(private songs: Song[]) {}
+
+  hasNext(): boolean {
+    return this.index < this.songs.length;
+  }
+
+  next(): Song {
+    return this.songs[this.index++];
+  }
+}
+
+const playlist = new Playlist();
+
+playlist.add(new Song("Song A"));
+playlist.add(new Song("Song B"));
+playlist.add(new Song("Song C"));
+
+const iterator = playlist.createIterator();
+
+while (iterator.hasNext()) {
+  const song = iterator.next();
+  console.log(song.title);
+}
+```
+
+### Pros
+✅ Follows Single Responsibility Principle  
+✅ Simplifies iteration logic  
+
+### Cons
+❌ Adds extra classes / abstraction  
+❌ Slight overhead for simple collections  
