@@ -1306,6 +1306,7 @@ console.log("-----");
 
 const jsonImporter = new JsonApiImporter();
 jsonImporter.import();
+```
 
 ### Pros
 ✅ Avoids code duplication  
@@ -1317,4 +1318,4 @@ jsonImporter.import();
 ❌ Can create tight coupling  
 ❌ Base class can become too complex  
 ❌ Maintenance can be difficult  
-```
+
