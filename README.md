@@ -1242,3 +1242,79 @@ while (sorted.hasNext()) {
 ### Cons
 ❌ Adds extra classes / abstraction  
 ❌ Slight overhead for simple collections  
+
+### 3.8 Template Method Pattern
+The Template Method pattern defines the skeleton of an algorithm in a base class, while letting subclasses override specific steps without changing the algorithm structure.
+
+```TS
+abstract class DataImporter {
+  // Template method (algorithm skeleton)
+  import(): void {
+    const raw = this.load();
+    const parsed = this.parse(raw);
+    this.validate(parsed);
+    this.save(parsed);
+  }
+
+  protected abstract load(): string;
+
+  protected abstract parse(data: string): any[];
+
+  protected validate(data: any[]): void {
+    console.log("Validating data...");
+  }
+
+  protected save(data: any[]): void {
+    console.log("Saving", data.length, "records to DB");
+  }
+}
+
+class CsvImporter extends DataImporter {
+  protected load(): string {
+    console.log("Loading CSV file...");
+    return "John,30\nAlice,25";
+  }
+
+  protected parse(data: string): any[] {
+    console.log("Parsing CSV...");
+    return data.split("\n").map(row => {
+      const [name, age] = row.split(",");
+      return { name, age: Number(age) };
+    });
+  }
+}
+
+class JsonApiImporter extends DataImporter {
+  protected load(): string {
+    console.log("Fetching JSON API...");
+    return JSON.stringify([
+      { name: "John", age: 30 },
+      { name: "Alice", age: 25 }
+    ]);
+  }
+
+  protected parse(data: string): any[] {
+    console.log("Parsing JSON...");
+    return JSON.parse(data);
+  }
+}
+
+const csvImporter = new CsvImporter();
+csvImporter.import();
+
+console.log("-----");
+
+const jsonImporter = new JsonApiImporter();
+jsonImporter.import();
+
+### Pros
+✅ Avoids code duplication  
+✅ Easy to extend  
+✅ Follows Open/Closed Principle  
+
+### Cons
+❌ Uses inheritance  
+❌ Can create tight coupling  
+❌ Base class can become too complex  
+❌ Maintenance can be difficult  
+```
