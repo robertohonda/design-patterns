@@ -1319,3 +1319,77 @@ jsonImporter.import();
 ❌ Base class can become too complex  
 ❌ Maintenance can be difficult  
 
+### 3.9 Memento Method Pattern
+The Memento pattern lets you capture and restore an object’s previous state without exposing its internal details.
+
+```TS
+class EditorMemento {
+  constructor(public readonly content: string) {}
+}
+
+class Editor {
+  private content: string = "";
+
+  type(text: string) {
+    this.content += text;
+  }
+
+  getContent(): string {
+    return this.content;
+  }
+
+  save(): EditorMemento {
+    return new EditorMemento(this.content);
+  }
+
+  restore(memento: EditorMemento) {
+    this.content = memento.content;
+  }
+}
+
+class History {
+  private stack: EditorMemento[] = [];
+
+  push(memento: EditorMemento) {
+    this.stack.push(memento);
+  }
+
+  pop(): EditorMemento | undefined {
+    return this.stack.pop();
+  }
+}
+
+const editor = new Editor();
+const history = new History();
+
+editor.type("Hello ");
+history.push(editor.save());
+
+editor.type("World!");
+history.push(editor.save());
+
+console.log(editor.getContent()); 
+// Hello World!
+
+// Undo
+editor.restore(history.pop()!);
+
+console.log(editor.getContent()); 
+// Hello 
+
+// Undo again
+editor.restore(history.pop()!);
+
+console.log(editor.getContent()); 
+// (empty)
+```
+
+### Pros
+✅ Enables undo/redo functionality  
+✅ Preserves encapsulation  
+
+### Cons
+❌ Memory usage can grow fast (many snapshots)  
+❌ Can be inefficient for large states  
+❌ Caretaker logic can get complex (redo stacks, limits)  
+❌ Not ideal if state is huge (needs optimization)  
