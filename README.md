@@ -1489,5 +1489,5 @@ console.log(countVisitor.getCount());
 ### Cons
 ❌ Hard to add new element types  
 ❌ Can increase boilerplate  
+❌ Double dispatch can be hard to understand  
 ❌ Potential for code duplication  
-❌ Can increase boilerplate  
