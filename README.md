@@ -1393,3 +1393,101 @@ console.log(editor.getContent());
 ❌ Can be inefficient for large states  
 ❌ Caretaker logic can get complex (redo stacks, limits)  
 ❌ Not ideal if state is huge (needs optimization)  
+
+
+### 3.10 Visitor Pattern
+The Visitor pattern lets you add new operations to a set of classes without modifying those classes.
+
+```TS
+interface FileSystemNode {
+  accept(visitor: Visitor): void;
+}
+
+class File implements FileSystemNode {
+  constructor(public name: string, public size: number) {}
+
+  accept(visitor: Visitor): void {
+    visitor.visitFile(this);
+  }
+}
+
+class Folder implements FileSystemNode {
+  constructor(public name: string, public children: FileSystemNode[]) {}
+
+  accept(visitor: Visitor): void {
+    visitor.visitFolder(this);
+  }
+}
+
+interface Visitor {
+  visitFile(file: File): void;
+  visitFolder(folder: Folder): void;
+}
+
+class SizeVisitor implements Visitor {
+  private total = 0;
+
+  visitFile(file: File): void {
+    this.total += file.size;
+  }
+
+  visitFolder(folder: Folder): void {
+    for (const child of folder.children) {
+      child.accept(this);
+    }
+  }
+
+  getTotalSize(): number {
+    return this.total;
+  }
+}
+
+class FileCountVisitor implements Visitor {
+  private count = 0;
+
+  visitFile(file: File): void {
+    this.count++;
+  }
+
+  visitFolder(folder: Folder): void {
+    for (const child of folder.children) {
+      child.accept(this);
+    }
+  }
+
+  getCount(): number {
+    return this.count;
+  }
+}
+
+const tree = new Folder("root", [
+  new File("a.txt", 100),
+  new Folder("docs", [
+    new File("b.txt", 200),
+    new File("c.txt", 300)
+  ])
+]);
+
+const sizeVisitor = new SizeVisitor();
+tree.accept(sizeVisitor);
+
+console.log(sizeVisitor.getTotalSize()); 
+// 600
+
+const countVisitor = new FileCountVisitor();
+tree.accept(countVisitor);
+
+console.log(countVisitor.getCount()); 
+// 3
+```
+
+### Pros
+✅ Easy to add new operations without modifying existing classes  
+✅ Keeps object model clean and focused on data  
+✅ Follows Open/Closed Principle (for operations)  
+
+### Cons
+❌ Hard to add new element types  
+❌ Can increase boilerplate  
+❌ Potential for code duplication  
+❌ Can increase boilerplate  
