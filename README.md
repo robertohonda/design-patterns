@@ -1491,3 +1491,80 @@ console.log(countVisitor.getCount());
 ❌ Can increase boilerplate  
 ❌ Double dispatch can be hard to understand  
 ❌ Potential for code duplication  
+
+### 3.11 Interpreter Pattern
+The Interpreter pattern is used to evaluate sentences in a language by defining a representation for its grammar and an interpreter that processes it.
+
+This pattern is commonly used in:
+- SQL engines
+- regex engines
+- template engines
+- rule engines
+- calculators
+
+```TS
+interface Expression {
+  interpret(context: Record<string, any>): boolean;
+}
+
+class EqualsExpression implements Expression {
+  constructor(
+    private key: string,
+    private expected: any
+  ) {}
+
+  interpret(context: Record<string, any>): boolean {
+    return context[this.key] === this.expected;
+  }
+}
+
+class AndExpression implements Expression {
+  constructor(
+    private left: Expression,
+    private right: Expression
+  ) {}
+
+  interpret(context: Record<string, any>): boolean {
+    return (
+      this.left.interpret(context) &&
+      this.right.interpret(context)
+    );
+  }
+}
+
+class OrExpression implements Expression {
+  constructor(
+    private left: Expression,
+    private right: Expression
+  ) {}
+
+  interpret(context: Record<string, any>): boolean {
+    return (
+      this.left.interpret(context) ||
+      this.right.interpret(context)
+    );
+  }
+}
+
+const rule: Expression =
+  new AndExpression(
+    new EqualsExpression("role", "admin"),
+    new EqualsExpression("active", true)
+  );
+
+const user1 = { role: "admin", active: true };
+const user2 = { role: "user", active: true };
+
+console.log(rule.interpret(user1)); // true
+console.log(rule.interpret(user2)); // false
+```
+
+### Pros
+✅ Easy to add new grammar rules  
+✅ Very flexible and extensible  
+
+### Cons
+❌ Can create many small classes  
+❌ Hard to maintain for complex grammars  
+❌ Performance can be slow for large trees  
+❌ Usually requires a separate parser, which is complex  
